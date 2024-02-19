@@ -1,0 +1,42 @@
+# The following SQL query was used to find the top 10 countries for number of Rockbuster customers:
+
+SELECT D.country,
+COUNT (customer_id) AS number_customers
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+GROUP BY country
+ORDER BY number_customers DESC
+LIMIT 10
+
+# The following SQL query was used to find the top 10 cities of the top 10 countries for number of Rockbuster customers:
+
+SELECT D.country, C.city,
+COUNT(customer_id) AS number_customers
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = D.country_id
+WHERE D.country IN ('India', 'China', 'United States', 'Japan', 'Mexico', 'Brazil', 'Russian Federation', 'Phillipines', 'Turkey', 'Indonesia')
+GROUP BY country,
+city
+ORDER BY number_customers DESC
+LIMIT 10
+
+# The following SQL query was used to find the top 5 customers of the top 10 cities with the highest amount of total payments to Rockbuster:
+
+SELECT A.customer_id, A.first_name, A.last_name, C.city, D.country,
+Sum (E.amount) AS total_amount_paid
+From customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_id = E.customer_id
+WHERE C.city IN ('Aurora', 'So Leopoldo', 'Tianjin', 'Shanwei', 'Citrus Heights', 'Teboksary', 'Iwaki', 'Ambattur', 'Cianjur', 'Acua')
+GROUP BY A.customer_id,
+A.first_name,
+A.last_name,
+C.city, 
+D.country
+ORDER BY total_amount_paid DESC
+LIMIT 5
